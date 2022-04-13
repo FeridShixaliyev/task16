@@ -1,0 +1,97 @@
+CREATE DATABASE SchoolExams
+
+USE SchoolExams
+
+CREATE TABLE Subjects
+(
+Id INT PRIMARY KEY IDENTITY,
+Name NVARCHAR(20) NOT NULL,
+)
+
+CREATE TABLE Exams
+(
+Id INT PRIMARY KEY IDENTITY,
+Date DATETIME2 NOT NULL,
+SubjectId INT FOREIGN KEY REFERENCES Subjects(Id)
+)
+
+INSERT INTO Subjects
+VALUES
+('Riyaziyyat'),
+('Fizika'),
+('Kimya'),
+('Ingilis dili'),
+('Cografiya')
+
+INSERT INTO Exams
+VALUES
+('2020-01-21'),
+('2020-03-15'),
+('2020-05-07'),
+('2021-08-24'),
+('2022-02-20')
+
+CREATE TABLE Groups
+(
+Id INT PRIMARY KEY IDENTITY,
+No NVARCHAR(10) NOT NULL,
+)
+
+CREATE TABLE Students
+(
+Id INT PRIMARY KEY IDENTITY,
+Name NVARCHAR(20) NOT NULL,
+Surname NVARCHAR(20) NOT NULL,
+GroupId INT FOREIGN KEY REFERENCES Groups(Id)
+)
+
+INSERT INTO Students(Name,Surname)
+VALUES
+('Hikmet','Abbasov'),
+('Akif','Hesenli'),
+('Murad','Semedov'),
+('Zeyneb','Sultanov'),
+('Heyder','Aliyev'),
+('Tural','Abbasov'),
+('Orxan','Zeynalov')
+
+INSERT INTO Groups(No)
+VALUES
+('AP203'),
+('AL234'),
+('AT343'),
+('AF123'),
+('SA533'),
+('FF888'),
+
+
+CREATE TABLE StudentExams
+(
+Id INT PRIMARY KEY IDENTITY,
+StudentId INT FOREIGN KEY REFERENCES Students(Name)
+ExamsId INT FOREIGN KEY REFERENCES Exams(Id)
+Result TINYINT,
+)
+
+INSERT INTO StudentExams(Result,StudentId,ExamsId)
+VALUES
+(40,2,1),
+(76,1,4),
+(87,2,3),
+(34,3,4),
+(90,3,5),
+(67,4,3),
+(82,6,1),
+(74,5,2),
+(95,6,2)
+
+
+SELECT St.Id,St.Name,St.Surname,Groups.No FROM Students AS St
+
+SELECT St.Id,St.Name,St.Surname,(SELECT COUNT(Id) FROM Exams WHERE StudentId=St.Id) FROM Students AS St
+
+SELECT *FROM Subject AS Sub WHERE(SELECT COUNT(Id) FROM Exams WHERE SubjectId=Sub.Id)=0
+
+SELECT Se.Result AS 'Result',Students.Name+' '+Students.Surname AS 'Fullname',(SELECT *FROM Students WHERE GroupId=Groups.No) FROM StudentExams AS Se
+
+//--------  Bezileri olmaya biler uzurlu sayin!!------
